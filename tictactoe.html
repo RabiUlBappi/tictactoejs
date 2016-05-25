@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <title>Tic Tac Toe</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+      html{background: #999; }
+      .modal,.panel{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+      .panel{box-shadow: 20px 35px 35px #000000}
+      .panel-heading{
+        font: bold 24px Georgia;
+        text-align: center;
+      }
+      .panel-body{padding-left: 0px;padding-right: 0px}
+      .menuBtn{ min-width: 105px; }
+      td{
+        height: 100px; width: 100px;
+        text-align: center;
+        font-family: sans-serif;
+        font-size: 55px;
+        font-weight: 1px;
+        color: #333;
+      }
+      .symbtn{
+        margin:0px;
+        height: 100%; 
+        width: 100%; 
+        background: -moz-radial-gradient(bottom,rgba(0,0,0,0),rgba(0,0,0,.2));
+      }
+      .panel-footer{
+        font: bold 12px sans-serif, Georgia;
+        text-align: center;
+      }
+      .alert{
+        font: bold 16px sans-serif;
+        text-align: center;
+        margin-bottom: 0px;
+        padding: 5px;
+      }
+    </style>
+
+  </head>
+
+  <body> 
+   
+    <div class="container">
+
+      <div class="panel panel-default ">
+
+        <div class="panel-heading">Tic Tac Toe</div>
+
+        <div class="panel-body">
+
+           <div class="container-fluid">
+
+            <div class="row">
+
+              <div class="col-sm-3 sideBar">
+
+                <div class="dropdown">
+                  <button class="btn btn-default menuBtn dropdown-toggle" data-toggle="dropdown">Type
+                  <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li id="singlePlayer" class="tglModal active" ><a href="#" onclick="changeMenuVar('gType','singlePlayer')">Single Player</a></li>
+                    <li id="multiPlayer" class="tglModal" ><a href="#" onclick="changeMenuVar('gType','multiPlayer')">Multi-player</a></li>
+                  </ul>
+                </div>
+                <br>
+                <div class="dropdown">
+                  <button id="level" class="btn btn-default menuBtn dropdown-toggle" data-toggle="dropdown">Level
+                  <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li id="easy" class="tglModal active" ><a href="#" onclick="changeMenuVar('gLevel','easy')">Easy</a></li>
+                    <li id="medium" class="tglModal" ><a href="#" onclick="changeMenuVar('gLevel','medium')">Medium</a></li>
+                    <li id="hard" class="tglModal" ><a href="#" onclick="changeMenuVar('gLevel','hard')">Hard</a></li>
+                  </ul>
+                </div>
+                <br>
+                <button id="reset" class="btn btn-danger menuBtn tglModal" onclick="changeMenuVar('reset')">Reset</button>
+                  
+              </div>
+
+              <div class="col-sm-9">
+
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td id="11"> <button onclick="person('11')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="12"> <button onclick="person('12')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="13"> <button onclick="person('13')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                    </tr>
+                    <tr>
+                      <td id="21"> <button onclick="person('21')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="22"> <button onclick="person('22')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="23"> <button onclick="person('23')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                    </tr>
+                    <tr>
+                      <td id="31"> <button onclick="person('31')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="32"> <button onclick="person('32')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                      <td id="33"> <button onclick="person('33')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button> </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div id="turnNotif" class="alert alert-warning fade in">Now Your Turn!</div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="panel-footer">&copy; This Game is developed by Rabi</div>
+
+      </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div id="confReset" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><strong>Confirmatioin!</strong></h4>
+          </div>
+          <div class="modal-body">
+            <p>This will reset your current game. Are you sure to go ahead?</p>
+             <div class="btn-group btn-group-justified">
+              <a id="resetYes" onclick="confirm('resetYes')" href="#" class="btn btn-danger" data-dismiss="modal">Yes</a>
+              <a id="resetNo" onclick="confirm('resetNo')" href="#" class="btn btn-default" data-dismiss="modal">No</a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-warning " data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+  <script>
+    
+    window.onload = function () {
+  document.getElementById('level').disabled = false;
+};
+
+var changeMenu = ''; // stores which menu should be changed 
+var newMenuItem = ''; // stores to which menu item should be changed 
+var gameType = "singlePlayer"; // stores game type as selected by the user, with default: "singlePlayer"
+var gameLevel = "easy"; // stores game type as selected by the user, with default: "singlePlayer"
+var player = "personP1"; // stores the player who will be playing next
+var countSquare = 0; // counts if all the cells are used
+var playedSquare = [[],[],[]]; // stores the symbol by their position as given
+
+// checks if the game is over with a symbol
+function isGameOverWith(symbol = ""){
+  var over = true;
+
+  for(var i = 0; i < 3; i++){
+    for(var j = 0; j < 3; j++){
+      if (playedSquare[i][j] != symbol) over = false;
+    }
+    if(over) return over;
+    over = true;
+  }
+
+  for(var i = 0; i < 3; i++){
+    for(var j = 0; j < 3; j++){
+      if (playedSquare[j][i] != symbol) over = false;
+    }
+    if(over) return over;
+    over = true;
+  }
+
+  if(playedSquare[0][0] == symbol && playedSquare[1][1] == symbol && playedSquare[2][2] == symbol) return true;
+
+  if(playedSquare[0][2] == symbol && playedSquare[1][1] == symbol && playedSquare[2][0] == symbol) return true;
+}
+
+function isGameOver(){
+  if(!isGameOverWith('O') && !isGameOverWith('X') && countSquare < 9){
+    return false;
+  }
+  return true;
+}
+
+// changes the 
+function changeResetButton(){
+  var reset = document.getElementById('reset');
+  if(isGameOver()){
+    reset.className = 'btn btn-warning menuBtn tglModal';
+    reset.innerHTML = 'Play Again!';
+  }else{
+    reset.className = 'btn btn-danger menuBtn tglModal';
+    reset.innerHTML = 'Reset';
+  }
+}
+
+// notifies about game status and game turn
+function notifyWhosTurn(){
+  var notif = '';
+
+  if(!isGameOver()) {
+    if (gameType == "singlePlayer") {
+      if(player == "personP1") notif = 'Now Your Turn!';
+      else if (player == "botP") notif = 'Now Bot\'s Turn!';
+    }
+    else if (gameType == "multiPlayer") {
+      if(player == "personP1") notif = 'Now Player1\'s Turn!';
+      else if(player == "personP2") notif = 'Now Player2\'s Turn!';
+    }
+  }else{
+    notif = 'Game Over! ';
+    if (isGameOverWith('O') || isGameOverWith('X')) {
+      if (gameType == "singlePlayer") {
+        if(player == "personP1") notif += 'You Lost!';
+        else if (player == "botP") notif += 'You Won!';
+      }
+      else if (gameType == "multiPlayer") {
+        if(player == "personP1") notif += 'Player2 Won!';
+        else if(player == "personP2") notif += 'Player1 Won!';
+      }
+    }else{
+      notif += 'No one wins.';
+    }
+  }
+  document.getElementById('turnNotif').innerHTML = notif;
+}
+
+
+
+/************************************************** This functions are only for the bot ********************************************************/
+
+// checks if the game could end with the specified symbol in the immediate next turn
+function isWinPossibleWith(symbol = ""){
+  for(i = 0; i < 3; i++){
+    for(j = 0; j < 3; j++){
+      if(playedSquare[i][j] == null){
+        playedSquare[i][j] = symbol;
+        if(isGameOverWith(symbol)){
+          playedSquare[i][j] = null;
+          return {row:i,col:j};
+        }
+        playedSquare[i][j] = null;
+      }
+    }
+  }
+
+  return false;
+}
+
+// chooses cell for easy level
+function chooseCellEasy(){
+  var rand = parseInt(Math.floor(Math.random() * 10000)) % 2;
+  
+  switch(rand){
+    case 0:
+      for(i = 0; i < 3; i++){
+        for(j = 0; j < 3; j++){
+          if(playedSquare[i][j] === null){
+            return {row:i, col:j};
+          }
+        }
+      }
+      return false;
+    break;
+
+    case 1:
+      for(i = 2; i >= 0; i--){
+        for(j = 2; j >= 0; j--){
+          if(playedSquare[j][i] === null){
+            return {row:j, col:i};
+          }
+        }
+      }
+      return false;
+    break;
+  }
+}
+
+// chooses cell for medium level
+function chooseCellMedium(){
+  if(playedSquare[1][1] == null){
+    return {row:1, col:1};
+  }else{
+    var rc = [];
+    for(var i = 0; i < 3; i++){
+      for(var j = 0; j < 3; j++){
+        if(playedSquare[i][j] === null){
+          rc.push(i.toString() + j);
+        }
+      }
+    } 
+
+    if (rc.length > 0) {
+      var k = parseInt(Math.floor(Math.random() * 10000)) % rc.length;
+      return {row:parseInt(rc[k] / 10), col:rc[k] % 10};
+    }
+
+    rc = null;
+  }
+  return false;
+}
+
+// chooses cell for hard level
+function chooseCellHard(botSymbol = ''){ 
+  if     (playedSquare[1][1] === null) return {row:1, col:1};
+  else if(playedSquare[0][0] === null || playedSquare[0][0] == botSymbol) {
+    if(playedSquare[0][0] === null) return {row:0, col:0};
+    else if(playedSquare[0][2] === null) return {row:0, col:2};
+    else if(playedSquare[2][0] === null) return {row:2, col:0};
+  }
+  else if(playedSquare[0][2] === null || playedSquare[0][2] == botSymbol) {
+    if(playedSquare[0][2] === null) return {row:0, col:2};
+    else if(playedSquare[2][2] === null) return {row:2, col:2};
+  }
+  else if(playedSquare[2][0] === null || playedSquare[2][0] == botSymbol) {
+    if(playedSquare[2][0] === null) return {row:2, col:0};
+    else if(playedSquare[2][2] === null) return {row:2, col:2};
+  }
+  else if(playedSquare[2][2] === null) return {row:2, col:2};
+  else return chooseCellMedium();
+}
+
+// chooses one of the cell choosing functions for the bot
+function chooseCell(botSymbol = ''){ 
+  if (gameLevel == 'medium') {
+    return chooseCellMedium();
+  } else if (gameLevel == 'hard') {
+    return chooseCellHard();
+  } else {
+    return chooseCellEasy(botSymbol);
+  }
+}
+
+// it is called automatically after the person() function and sets the bots symbol on its choosen cell
+function bot(){
+
+  if (!isGameOver() && player == "botP") {
+
+    symbol = 'X';
+    var i,j,br=0;
+    
+    var nextWinO = isWinPossibleWith("O");
+    var nextWinX = isWinPossibleWith("X");
+    
+    if (!nextWinX) {
+      if (!nextWinO) {
+        var rc = chooseCell('X');
+        playedSquare[rc.row][rc.col] = symbol;
+        document.getElementById((rc.row + 1).toString() + (rc.col + 1).toString()).innerHTML = symbol;
+      }
+      else {
+        playedSquare[nextWinO.row][nextWinO.col] = symbol;
+        document.getElementById((nextWinO.row + 1).toString() + (nextWinO.col + 1).toString()).innerHTML = symbol;
+      } 
+    }
+    else {
+      playedSquare[nextWinX.row][nextWinX.col] = symbol;
+      document.getElementById((nextWinX.row + 1).toString() + (nextWinX.col + 1).toString()).innerHTML = symbol;
+    } 
+
+    countSquare++;
+    player = "personP1";
+    notifyWhosTurn();
+  }
+  changeResetButton()
+}
+/************************************************** This functions are only for the bot ********************************************************/
+
+
+
+
+/************************************************** This function is only for the person ********************************************************/
+// it is called when a person clicks on a button and sets the persons symbol on the clicked cell
+function person(cellid = ""){
+
+  if(gameType == "singlePlayer"){
+    if (!isGameOver() && player == "personP1") {
+
+      symbol = 'O';     
+      playedSquare[parseInt(cellid / 10) - 1][cellid % 10 - 1] = symbol;
+      document.getElementById(cellid).innerHTML = symbol;
+      countSquare++;
+      player = "botP";
+      notifyWhosTurn();
+
+      if(!isGameOverWith("O")) setTimeout(bot, 1000);
+    }
+  }
+  else if(gameType == "multiPlayer"){
+    if (!isGameOver()) {
+      var symbol = '';
+
+      if (player == 'personP1') {
+        symbol = 'O';
+        player = 'personP2';
+      }   
+      else {
+        symbol = 'X';
+        player = 'personP1';
+      }
+
+      playedSquare[parseInt(cellid / 10) - 1][cellid % 10 - 1] = symbol;
+      document.getElementById(cellid).innerHTML = symbol;
+      countSquare++;
+      notifyWhosTurn();
+    }
+  }
+  changeResetButton();
+}
+/************************************************** This function is only for the person ********************************************************/
+
+
+
+
+/************************************************** This functions are only for changing the menu ********************************************************/
+// resets the board and other variables related to it
+function reset(){
+  changeMenu = '';
+  newMenuItem = '';
+  player = "personP1";
+  countSquare = 0; 
+  playedSquare = [[],[],[]]; 
+
+  for(var i = 1; i < 4; i++){
+    for(var j = 1; j < 4; j++){
+      document.getElementById(i.toString() + j).innerHTML = 
+      '<button onclick="person(' + i + j +')" class="symbtn btn btn-default" data-toggle="tooltip" title="Click on me"></button>';
+    }
+  }
+
+  notifyWhosTurn();
+  return;
+}
+
+// changes the menu global variables for change on later confirmation
+function changeMenuVar(cMenu = '', cMenuItem = ''){
+  changeMenu = cMenu;
+  newMenuItem = cMenuItem;
+  return;
+}
+
+// disables the clicked item in the menu
+function chooseListItem(prevItem = '', newItem = ''){
+  document.getElementById(newItem).className = "active";
+  document.getElementById(prevItem).className = "";
+  return;
+}
+
+// changes the game level
+function chooseGameType(){
+  if(newMenuItem != gameType){
+    chooseListItem(gameType, newMenuItem);
+    gameType = newMenuItem;
+    if (gameType == 'multiPlayer') {
+      document.getElementById('level').disabled = true;
+    } else {
+      document.getElementById('level').disabled = false;
+    }
+  }
+  return;
+}
+
+// changes the game level
+function chooseGameLevel(){
+  if(newMenuItem != gameLevel){
+    chooseListItem(gameLevel, newMenuItem);
+    gameLevel = newMenuItem;
+  }
+  return;
+}
+
+// changes the menu and/or reset the board
+function changeNow(){
+  if (changeMenu == 'gType') chooseGameType();
+  else if (changeMenu == 'gLevel') chooseGameLevel();
+  reset();
+  changeResetButton();
+  notifyWhosTurn();
+  return;
+}
+
+// gets the reset confirmation from the modal
+function confirm(conf = ''){
+  if(conf == 'resetYes'){
+    changeNow();
+  }else{
+    changeMenu = '';
+    newMenuItem = '';
+  }
+  return;
+}
+
+// displays the modal
+$('.tglModal').click(function(){
+  if (countSquare > 0 && !isGameOver()) {
+    var className = $(this).attr('class').toString();
+    if(($(this).attr('class').toString()).search('active') < 0) {
+      $('#confReset').modal('show');
+    }
+  } else {
+    changeNow();
+  } 
+}); 
+/************************************************** This functions are only for changing the menu ********************************************************/
+
+  </script>
+
+
+
+</html>
